@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		56375A591DA7519D00D56DA6 /* TileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A581DA7519D00D56DA6 /* TileCollectionViewCell.swift */; };
+		56375A5B1DA7742C00D56DA6 /* Drone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A5A1DA7742C00D56DA6 /* Drone.swift */; };
+		56375A5D1DA7863100D56DA6 /* Movable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A5C1DA7863100D56DA6 /* Movable.swift */; };
+		56375A5F1DA7871E00D56DA6 /* Treasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A5E1DA7871E00D56DA6 /* Treasure.swift */; };
+		56375A621DA7879D00D56DA6 /* GameComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A611DA7879D00D56DA6 /* GameComponent.swift */; };
 		56401B231DA73EE600522360 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B221DA73EE600522360 /* AppDelegate.swift */; };
 		56401B251DA73EE600522360 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B241DA73EE600522360 /* ViewController.swift */; };
 		56401B281DA73EE700522360 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56401B261DA73EE700522360 /* Main.storyboard */; };
@@ -36,6 +40,10 @@
 
 /* Begin PBXFileReference section */
 		56375A581DA7519D00D56DA6 /* TileCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileCollectionViewCell.swift; sourceTree = "<group>"; };
+		56375A5A1DA7742C00D56DA6 /* Drone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drone.swift; sourceTree = "<group>"; };
+		56375A5C1DA7863100D56DA6 /* Movable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movable.swift; sourceTree = "<group>"; };
+		56375A5E1DA7871E00D56DA6 /* Treasure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Treasure.swift; sourceTree = "<group>"; };
+		56375A611DA7879D00D56DA6 /* GameComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameComponent.swift; sourceTree = "<group>"; };
 		56401B1F1DA73EE600522360 /* Drone Treasure Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Drone Treasure Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56401B221DA73EE600522360 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56401B241DA73EE600522360 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +84,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		56375A601DA7872700D56DA6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				56375A5A1DA7742C00D56DA6 /* Drone.swift */,
+				56375A5C1DA7863100D56DA6 /* Movable.swift */,
+				56375A5E1DA7871E00D56DA6 /* Treasure.swift */,
+				56375A611DA7879D00D56DA6 /* GameComponent.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		56401B161DA73EE600522360 = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +118,7 @@
 		56401B211DA73EE600522360 /* Drone Treasure Hunt */ = {
 			isa = PBXGroup;
 			children = (
+				56375A601DA7872700D56DA6 /* Models */,
 				56401B221DA73EE600522360 /* AppDelegate.swift */,
 				56401B241DA73EE600522360 /* ViewController.swift */,
 				56401B261DA73EE700522360 /* Main.storyboard */,
@@ -262,8 +282,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56375A621DA7879D00D56DA6 /* GameComponent.swift in Sources */,
 				56375A591DA7519D00D56DA6 /* TileCollectionViewCell.swift in Sources */,
+				56375A5D1DA7863100D56DA6 /* Movable.swift in Sources */,
+				56375A5F1DA7871E00D56DA6 /* Treasure.swift in Sources */,
 				56401B251DA73EE600522360 /* ViewController.swift in Sources */,
+				56375A5B1DA7742C00D56DA6 /* Drone.swift in Sources */,
 				56401B231DA73EE600522360 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
