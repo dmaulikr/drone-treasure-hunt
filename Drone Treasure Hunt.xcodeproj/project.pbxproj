@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56375A591DA7519D00D56DA6 /* TileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A581DA7519D00D56DA6 /* TileCollectionViewCell.swift */; };
 		56401B231DA73EE600522360 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B221DA73EE600522360 /* AppDelegate.swift */; };
 		56401B251DA73EE600522360 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B241DA73EE600522360 /* ViewController.swift */; };
 		56401B281DA73EE700522360 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56401B261DA73EE700522360 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		56375A581DA7519D00D56DA6 /* TileCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileCollectionViewCell.swift; sourceTree = "<group>"; };
 		56401B1F1DA73EE600522360 /* Drone Treasure Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Drone Treasure Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56401B221DA73EE600522360 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56401B241DA73EE600522360 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				56401B291DA73EE700522360 /* Assets.xcassets */,
 				56401B2B1DA73EE700522360 /* LaunchScreen.storyboard */,
 				56401B2E1DA73EE700522360 /* Info.plist */,
+				56375A581DA7519D00D56DA6 /* TileCollectionViewCell.swift */,
 			);
 			path = "Drone Treasure Hunt";
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56375A591DA7519D00D56DA6 /* TileCollectionViewCell.swift in Sources */,
 				56401B251DA73EE600522360 /* ViewController.swift in Sources */,
 				56401B231DA73EE600522360 /* AppDelegate.swift in Sources */,
 			);
@@ -505,6 +509,7 @@
 				56401B491DA73EE700522360 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56401B4A1DA73EE700522360 /* Build configuration list for PBXNativeTarget "Drone Treasure HuntTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +518,7 @@
 				56401B4C1DA73EE700522360 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56401B4D1DA73EE700522360 /* Build configuration list for PBXNativeTarget "Drone Treasure HuntUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +527,7 @@
 				56401B4F1DA73EE700522360 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
