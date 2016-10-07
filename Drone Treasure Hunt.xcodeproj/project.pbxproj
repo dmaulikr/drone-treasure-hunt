@@ -12,6 +12,7 @@
 		56375A5D1DA7863100D56DA6 /* Movable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A5C1DA7863100D56DA6 /* Movable.swift */; };
 		56375A5F1DA7871E00D56DA6 /* Treasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A5E1DA7871E00D56DA6 /* Treasure.swift */; };
 		56375A621DA7879D00D56DA6 /* GameComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A611DA7879D00D56DA6 /* GameComponent.swift */; };
+		56375A641DA8394800D56DA6 /* Placeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56375A631DA8394800D56DA6 /* Placeable.swift */; };
 		56401B231DA73EE600522360 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B221DA73EE600522360 /* AppDelegate.swift */; };
 		56401B251DA73EE600522360 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56401B241DA73EE600522360 /* ViewController.swift */; };
 		56401B281DA73EE700522360 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56401B261DA73EE700522360 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 		56375A5C1DA7863100D56DA6 /* Movable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movable.swift; sourceTree = "<group>"; };
 		56375A5E1DA7871E00D56DA6 /* Treasure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Treasure.swift; sourceTree = "<group>"; };
 		56375A611DA7879D00D56DA6 /* GameComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameComponent.swift; sourceTree = "<group>"; };
+		56375A631DA8394800D56DA6 /* Placeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeable.swift; sourceTree = "<group>"; };
 		56401B1F1DA73EE600522360 /* Drone Treasure Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Drone Treasure Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56401B221DA73EE600522360 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56401B241DA73EE600522360 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,12 +89,21 @@
 		56375A601DA7872700D56DA6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				56375A651DA83F7C00D56DA6 /* Protocols */,
 				56375A5A1DA7742C00D56DA6 /* Drone.swift */,
-				56375A5C1DA7863100D56DA6 /* Movable.swift */,
 				56375A5E1DA7871E00D56DA6 /* Treasure.swift */,
 				56375A611DA7879D00D56DA6 /* GameComponent.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		56375A651DA83F7C00D56DA6 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				56375A5C1DA7863100D56DA6 /* Movable.swift */,
+				56375A631DA8394800D56DA6 /* Placeable.swift */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		56401B161DA73EE600522360 = {
@@ -288,6 +299,7 @@
 				56375A5F1DA7871E00D56DA6 /* Treasure.swift in Sources */,
 				56401B251DA73EE600522360 /* ViewController.swift in Sources */,
 				56375A5B1DA7742C00D56DA6 /* Drone.swift in Sources */,
+				56375A641DA8394800D56DA6 /* Placeable.swift in Sources */,
 				56401B231DA73EE600522360 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
