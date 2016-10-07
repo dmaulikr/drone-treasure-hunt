@@ -2,7 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "playerB.pdf"
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "the_pac_man_ghosts_by_alisonwonderland1951-d5smt5k.png",
+      "scale" : "3x"
     }
   ],
   "info" : {

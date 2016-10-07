@@ -17,6 +17,6 @@ class TileCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         tilePaintView.layer.cornerRadius = self.frame.width / 2
-        tilePaintView.clipsToBounds = true
+        tilePaintView.clipsToBounds = false
     }
 }

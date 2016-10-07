@@ -58,11 +58,11 @@ class ViewController: UIViewController {
         let goldPosition = computeTreasurePosition()
         let droneAPosition = computeDronePosition()
         let droneBPosition = computeDronePosition()
-        droneA = Drone(with: #imageLiteral(resourceName: "droneA"), position: droneAPosition, color: UIColor.orange)
+        droneA = Drone(with: UIImage(named: "droneA")!, position: droneAPosition, color: UIColor.orange)
         droneA.put(in: view(at: droneAPosition))
-        droneB = Drone(with: #imageLiteral(resourceName: "droneB"), position: droneBPosition, color: UIColor.blue)
+        droneB = Drone(with: UIImage(named: "droneB")!, position: droneBPosition, color: UIColor.blue)
         droneB.put(in: view(at: droneBPosition))
-        treasure = Treasure(with: #imageLiteral(resourceName: "gold"), position: goldPosition)
+        treasure = Treasure(with: UIImage(named: "treasure")!, position: goldPosition)
         treasure.put(in: view(at: goldPosition))
         print(goldPosition)
     }
@@ -74,11 +74,11 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        self.positionDronesAndTreasureInGrid()
         let newGameAlertController = UIAlertController(title: nil, message: "Tap on the start button and the drone treasure hunt will begin", preferredStyle: .alert)
 
         let startAction = UIAlertAction(title: "Start", style: .default) { (action) in
-            self.positionDronesAndTreasureInGrid()
+
         }
 
         newGameAlertController.addAction(startAction)
@@ -115,7 +115,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TileCollectionViewCell.identifier, for: indexPath)
-        print(indexPath)
         if !cornerIndexPaths.contains(indexPath) && !nonCornerIndexpaths.contains(indexPath) {
             nonCornerIndexpaths.append(indexPath)
         }
