@@ -284,7 +284,9 @@ class ViewController: UIViewController {
                 self.prepareNewGame()
             })
             alertController.addAction(restartAction)
-            self.present(alertController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.present(alertController, animated: true, completion: nil)
+            }
         }
     }
 
