@@ -19,7 +19,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var droneAScoreLabel: UILabel!
     @IBOutlet weak var droneBScoreLabel: UILabel!
 
-    var <#name#> = <#value#>
+    var droneAWinsCount = 0
+    var droneBWinsCount = 0
 
     var cornerIndexPaths = [IndexPath]()
 
@@ -46,7 +47,8 @@ class ViewController: UIViewController {
         self.operationQueue.qualityOfService = .userInteractive
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        droneAScoreLabel.text = "0"
+        droneAScoreLabel.text = "\(droneAWinsCount)"
+        droneBScoreLabel.text = "\(droneBWinsCount)"
         populateIndexPathsArray()
     }
 
@@ -56,31 +58,39 @@ class ViewController: UIViewController {
         prepareNewGame()
     }
 
+    let moveTimeInterval = 0.5
     func startMatch() {
         if self.needsReset {
             prepareNewGame()
         }
-        self.timer = Timer(timeInterval: 0.5, repeats: true, block: { (timer) in
+        self.timer = Timer(timeInterval: moveTimeInterval, repeats: true, block: { (timer) in
             self.moveDrones()
         })
         self.timer?.fire()
     }
 
     func prepareNewGame() {
-        defer {
-            winHasOccured = false
-            positionDronesAndTreasureInGrid()
-            showNewGameAlert()
+
+        let continueBlock = {
+            self.winHasOccured = false
+            self.positionDronesAndTreasureInGrid()
+            self.showNewGameAlert()
         }
 
         guard winHasOccured == true else {
+            continueBlock()
             return
         }
-        var paths = droneA?.path
-        paths?.append(contentsOf: droneB!.path)
+        var paths = Set<IndexPath>((droneA?.path)!)
+        paths = paths.union((droneB?.path)!)
         droneA?.path = Path()
         droneB?.path = Path()
-        self.collectionView?.reloadItems(at: paths!)
+        self.collectionView.performBatchUpdates({ 
+            self.collectionView?.reloadItems(at: Array(paths))
+            }) { (finished) in
+                continueBlock()
+        }
+
     }
 
     func showNewGameAlert() {
@@ -250,10 +260,12 @@ class ViewController: UIViewController {
         var message = ""
         if droneA?.position == treasure!.position {
             message = "droneA won"
+            droneAWinsCount += 1
             winHasOccured = true
         }
         if droneB?.position == treasure!.position  {
             message = "droneB won"
+            droneBWinsCount += 1
             winHasOccured = true
         }
         if winHasOccured {
