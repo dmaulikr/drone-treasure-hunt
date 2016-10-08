@@ -12,9 +12,15 @@ import UIKit
 class Drone: GameComponent, Movable {
     var color: UIColor!
     var path = Path()
-    override var position: IndexPath! {
+    override var position: IndexPath? {
         willSet(newPosition) {
-            path.append(newPosition)
+            if let currentPosition = position {
+                guard newPosition != path.last else {
+                    path.removeLast()
+                    return
+                }
+                path.append(currentPosition)
+            }
         }
     }
 
