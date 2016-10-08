@@ -16,7 +16,6 @@ class Drone: GameComponent, Movable {
         willSet(newPosition) {
             path.append(newPosition)
         }
-
     }
 
     convenience init(with image: UIImage, position: IndexPath, color: UIColor) {

@@ -17,13 +17,48 @@ class ViewController: UIViewController {
     let operationQueue = OperationQueue()
     @IBOutlet weak var collectionView: UICollectionView!
 
+    var cornerIndexPaths = [IndexPath]()
+
+    var nonCornerIndexpaths = [IndexPath]()
+
+    var winHasOccured = false
+    var droneA: Drone?
+    var droneB: Drone?
+    var treasure: Treasure?
+
+    //MARK: - viewController life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.operationQueue.maxConcurrentOperationCount = 1
         self.operationQueue.qualityOfService = .userInteractive
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        populateIndexPathsArray()
+    }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        createGameComponents()
+        positionDronesAndTreasureInGrid()
+        let newGameAlertController = UIAlertController(title: nil, message: "Tap on the start button and the drone treasure hunt will begin", preferredStyle: .alert)
+
+        let startAction = UIAlertAction(title: "Start", style: .default) { (action) in
+            self.moveDrones()
+        }
+
+        newGameAlertController.addAction(startAction)
+
+        present(newGameAlertController, animated: true, completion: nil)
+        
+    }
+
+    //MARK: preparation to the game
+    func populateIndexPathsArray() {
+        populateCornerIndexPaths()
+        populateNonCornerIndexPath()
+    }
+
+    func populateCornerIndexPaths() {
         // the assumption here is that we are dealing with an equal number of
         // rows and columns
         let topLeft = IndexPath(row: 0, section: 0)
@@ -33,16 +68,32 @@ class ViewController: UIViewController {
         cornerIndexPaths = [topLeft, topRight, bottomLeft, bottomRight]
     }
 
-    var cornerIndexPaths = [IndexPath]()
+    func populateNonCornerIndexPath() {
+        (1..<colsNumber*rowsNumber).forEach { (idx) in
+            let indexPath = self.indexPath(with: idx)
+            if !cornerIndexPaths.contains(indexPath) {
+                nonCornerIndexpaths.append(indexPath)
+            }
+        }
+    }
 
-    var nonCornerIndexpaths = [IndexPath]()
+    func createGameComponents() {
+        let treasurePosition = computeTreasurePosition()
+        let droneAPosition = computeDronePosition()
+        let droneBPosition = computeDronePosition()
+        droneA = Drone(with: UIImage(named: "droneA")!, position: droneAPosition, color: UIColor.orange)
+        droneB = Drone(with: UIImage(named: "droneB")!, position: droneBPosition, color: UIColor.blue)
+        treasure = Treasure(with: UIImage(named: "treasure")!, position: treasurePosition)
+    }
 
-    var positionDroneA: IndexPath?
-    var positionDroneB: IndexPath?
-    var winHasOccured = false
-    var droneA: Drone?
-    var droneB: Drone?
-    var treasure: Treasure!
+    func positionDronesAndTreasureInGrid() {
+        guard let droneA = droneA, let droneB = droneB, let treasure = treasure  else {
+            return
+        }
+        droneA.put(in: view(at: droneA.position))
+        droneB.put(in: view(at: droneB.position))
+        treasure.put(in: view(at: treasure.position))
+    }
 
     func computeTreasurePosition() -> IndexPath {
         let index = Int(arc4random_uniform(UInt32(nonCornerIndexpaths.count)))
@@ -56,23 +107,10 @@ class ViewController: UIViewController {
         return droneAIndexPath
     }
 
-    func positionDronesAndTreasureInGrid() {
-        let goldPosition = computeTreasurePosition()
-        let droneAPosition = computeDronePosition()
-        let droneBPosition = computeDronePosition()
-        droneA = Drone(with: UIImage(named: "droneA")!, position: droneAPosition, color: UIColor.orange)
-        droneA?.put(in: view(at: droneAPosition))
-        droneB = Drone(with: UIImage(named: "droneB")!, position: droneBPosition, color: UIColor.blue)
-        droneB?.put(in: view(at: droneBPosition))
-        treasure = Treasure(with: UIImage(named: "treasure")!, position: goldPosition)
-        treasure.put(in: view(at: goldPosition))
-        print(goldPosition)
-    }
-
     func view(at indexPath: IndexPath) -> UIView {
         return tileCollectionViewCell(at: indexPath).tilePaintView
     }
-    
+
     func move(drone: Drone) {
         let forbiddenPath = drone === self.droneA! ? self.droneB!.path : self.droneA!.path
         let currentPosition = drone.position
@@ -83,6 +121,7 @@ class ViewController: UIViewController {
         print(drone.path)
     }
 
+    //MARK: drone movement logic
     func getNextPosition(for drone: Drone, withforbiddenPath path: Path) -> IndexPath {
         var possibleMoves = [IndexPath]()
         let currentRow = drone.position.row
@@ -115,7 +154,7 @@ class ViewController: UIViewController {
                 return !path.contains(indexpath)
             }
         let winningMove = possibleMoves.filter { (indexpath) -> Bool in
-            return indexpath == treasure.position
+            return indexpath == treasure!.position
         }.first
         if let winningMove = winningMove {
             return winningMove
@@ -126,22 +165,13 @@ class ViewController: UIViewController {
         return newMove
     }
 
-    func indexPath(with row: Int) -> IndexPath {
-        assert(row >= 0)
-        return IndexPath(row: row, section: 0)
-    }
-
-    func index(from row: Int) -> Int {
-        return row % rowsNumber
-    }
-
     func checkWin() {
         var message = ""
-        if droneA?.position == treasure.position {
+        if droneA?.position == treasure!.position {
             message = "droneA won"
             winHasOccured = true
         }
-        if droneB?.position == treasure.position  {
+        if droneB?.position == treasure!.position  {
             message = "droneB won"
             winHasOccured = true
         }
@@ -157,15 +187,19 @@ class ViewController: UIViewController {
 
     func moveDrones() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            self.operationQueue.addOperation({
+            let checkWinClosure = {
                 if self.winHasOccured {
                     return
                 }
+            }
+            self.operationQueue.addOperation({
+                checkWinClosure()
                 DispatchQueue.main.sync {
                     self.move(drone: self.droneA!)
                 }
             })
             self.operationQueue.addOperation({
+                checkWinClosure()
                 if self.winHasOccured {
                     return
                 }
@@ -183,22 +217,6 @@ class ViewController: UIViewController {
         })
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.positionDronesAndTreasureInGrid()
-        let newGameAlertController = UIAlertController(title: nil, message: "Tap on the start button and the drone treasure hunt will begin", preferredStyle: .alert)
-
-        let startAction = UIAlertAction(title: "Start", style: .default) { (action) in
-
-            self.moveDrones()
-        }
-
-        newGameAlertController.addAction(startAction)
-
-        present(newGameAlertController, animated: true, completion: nil)
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         switch self.traitCollection.userInterfaceIdiom {
         case .phone:
@@ -213,8 +231,19 @@ class ViewController: UIViewController {
             defaultGap = 0.0
         }
     }
+
+    //MARK: Utility methods
+    func indexPath(with row: Int) -> IndexPath {
+        assert(row >= 0)
+        return IndexPath(row: row, section: 0)
+    }
+
+    func index(from row: Int) -> Int {
+        return row % rowsNumber
+    }
 }
 
+//MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout -
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -227,9 +256,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TileCollectionViewCell.identifier, for: indexPath) as! TileCollectionViewCell
-        if !cornerIndexPaths.contains(indexPath) && !nonCornerIndexpaths.contains(indexPath) {
-            nonCornerIndexpaths.append(indexPath)
-        }
         if (droneA?.path.contains(indexPath) == true) {
             cell.tilePaintView.backgroundColor = droneA?.color
         }
