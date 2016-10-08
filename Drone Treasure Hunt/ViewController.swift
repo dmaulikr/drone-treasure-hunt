@@ -19,8 +19,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var droneAScoreLabel: UILabel!
     @IBOutlet weak var droneBScoreLabel: UILabel!
 
-    var droneAWinsCount = 0
-    var droneBWinsCount = 0
+    var droneAWinsCount = 0 {
+        willSet(new) {
+            DispatchQueue.main.async {
+                self.droneAScoreLabel.text = " \(new)"
+            }
+        }
+    }
+    var droneBWinsCount = 0 {
+        willSet(new) {
+            DispatchQueue.main.async {
+                self.droneBScoreLabel.text = " \(new)"
+            }
+        }
+    }
 
     var cornerIndexPaths = [IndexPath]()
 
@@ -47,8 +59,6 @@ class ViewController: UIViewController {
         self.operationQueue.qualityOfService = .userInteractive
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        droneAScoreLabel.text = "\(droneAWinsCount)"
-        droneBScoreLabel.text = "\(droneBWinsCount)"
         populateIndexPathsArray()
     }
 
@@ -137,6 +147,8 @@ class ViewController: UIViewController {
         droneA = Drone(with: UIImage(named: "droneA")!, position: nil, color: UIColor.orange)
         droneB = Drone(with: UIImage(named: "droneB")!, position: nil, color: UIColor.blue)
         treasure = Treasure(with: UIImage(named: "treasure")!, position: nil)
+        droneAWinsCount = 0
+        droneBWinsCount = 0
     }
 
     func computeAndAssignComponentsPosition() {
