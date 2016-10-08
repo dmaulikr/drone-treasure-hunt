@@ -10,5 +10,6 @@ import Foundation
 import UIKit
 
 protocol Placeable {
+    var position: IndexPath? {get set}
     func put(in place: UIView!)
 }

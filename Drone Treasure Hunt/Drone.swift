@@ -18,14 +18,17 @@ class Drone: GameComponent, Movable {
         }
     }
 
-    convenience init(with image: UIImage, position: IndexPath, color: UIColor) {
+    convenience init(with image: UIImage, position: IndexPath?, color: UIColor) {
         self.init(with: image, position: position)
-        path.append(position)
+        if let position = position {
+            path.append(position)
+        }
         self.color = color
     }
 
     func move(to place: UIView) {
-        clearImageViewConstraints()
+        assert(Thread.isMainThread)
+        clearPreviousPlace()
         UIView.animate(withDuration: 1, animations: {
             place.addSubview(self.imageView)
             let views = ["view": self.imageView!]
@@ -33,9 +36,5 @@ class Drone: GameComponent, Movable {
             place.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|", options: [.alignAllCenterX], metrics: nil, views: views))
             place.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", options: [.alignAllCenterY], metrics: nil, views: views))
             }, completion: nil)
-    }
-    
-    func clearImageViewConstraints() {
-        self.imageView.superview?.removeConstraints(self.imageView.constraints)
     }
 }
