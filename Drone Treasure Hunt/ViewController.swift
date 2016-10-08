@@ -26,6 +26,7 @@ class ViewController: UIViewController {
             }
         }
     }
+
     var droneBWinsCount = 0 {
         willSet(new) {
             DispatchQueue.main.async {
@@ -35,9 +36,7 @@ class ViewController: UIViewController {
     }
 
     var cornerIndexPaths = [IndexPath]()
-
     var nonCornerIndexpaths = [IndexPath]()
-
     var winHasOccured: Bool = false {
         willSet(win) {
             if win {
@@ -100,7 +99,6 @@ class ViewController: UIViewController {
             }) { (finished) in
                 continueBlock()
         }
-
     }
 
     func showNewGameAlert() {
