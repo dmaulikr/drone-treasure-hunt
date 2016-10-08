@@ -9,12 +9,11 @@
 import Foundation
 import UIKit
 
-enum moves {
+enum Moves {
     case up, down, left, right
 }
-
+typealias Path = [IndexPath]
 protocol Movable {
-    var path: [IndexPath]? { get }
-
-    func move(to view:UIView)
+    var path: Path { get }
+    func move(to place:UIView)
 }
