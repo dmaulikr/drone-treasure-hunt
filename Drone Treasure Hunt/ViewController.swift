@@ -219,7 +219,9 @@ class ViewController: UIViewController {
 
     func move(drone: Drone) {
         let currentPosition = drone.position
-        let nextPosition = getNextPosition(for: drone)
+        guard let nextPosition = getNextPosition(for: drone) else {
+            return
+        }
         drone.position = nextPosition
         DispatchQueue.main.sync {
             drone.move(to: self.rect(at: nextPosition))
@@ -230,7 +232,7 @@ class ViewController: UIViewController {
     }
 
     //MARK: drone movement logic
-    func getNextPosition(for drone: Drone) -> IndexPath {
+    func getNextPosition(for drone: Drone) -> IndexPath? {
         var possibleMoves = [IndexPath]()
         let opponentDrone = opponent(of: drone)
         let currentRow = drone.position!.row
@@ -259,6 +261,9 @@ class ViewController: UIViewController {
                 possibleMoves.append(indexpath)
         }
 
+        guard possibleMoves.count > 0 else {
+            return nil
+        }
         possibleMoves = possibleMoves.filter { (indexpath) -> Bool in
                 return !opponentDrone.path.contains(indexpath) && opponentDrone.position != indexpath
             }
@@ -268,6 +273,7 @@ class ViewController: UIViewController {
         if let winningMove = winningMove {
             return winningMove
         }
+
         let nextIndex = Int(arc4random_uniform(UInt32(possibleMoves.count)))
         let newMove = possibleMoves[nextIndex]
         return newMove
