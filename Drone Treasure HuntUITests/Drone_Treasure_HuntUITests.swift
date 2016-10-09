@@ -28,9 +28,32 @@ class Drone_Treasure_HuntUITests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testInfiniteHunt() {
+        
+        let app = XCUIApplication()
+        let startButton = app.alerts.buttons["Start"]
+        let newHuntButton = app.alerts["Win!!!!"].buttons["New hunt"]
+
+        infiniteTest(startButton: startButton, newHuntButton: newHuntButton)
     }
-    
+
+    func infiniteTest(startButton: XCUIElement, newHuntButton: XCUIElement) {
+        let exists = NSPredicate(format: "exists == 1")
+
+        expectation(for: exists, evaluatedWith: startButton, handler: nil)
+
+        waitForExpectations(timeout: 4) { (error) in
+            startButton.tap()
+        }
+
+
+        expectation(for: exists, evaluatedWith: newHuntButton, handler: nil)
+
+        waitForExpectations(timeout: 20) { (error) in
+            newHuntButton.tap()
+        }
+
+        infiniteTest(startButton: startButton, newHuntButton: newHuntButton)
+    }
+
 }
