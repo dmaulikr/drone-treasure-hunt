@@ -11,5 +11,6 @@ import UIKit
 
 protocol Placeable {
     var position: IndexPath? {get set}
-    func put(in place: UIView!)
+    var playGroundView: UIView! { get set }
+    func put(in place: CGRect)
 }

@@ -11,28 +11,76 @@ import UIKit
 
 class GameComponent: Placeable {
     internal var imageView: UIImageView!
+    var playGroundView: UIView!
     var position: IndexPath?
-    convenience init(with image: UIImage, position: IndexPath?) {
+    internal var topConstraint: NSLayoutConstraint?
+    internal var leftConstraint: NSLayoutConstraint?
+    convenience init(with image: UIImage, position: IndexPath?, playGroundView: UIView) {
         self.init()
         self.position = position
         self.imageView = UIImageView(image: image)
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.playGroundView = playGroundView
     }
 
-    internal func clearPreviousPlace() {
-        assert(Thread.isMainThread)
-        self.imageView.superview?.removeConstraints(self.imageView.constraints)
+    internal func animateTopLefConstraints(with y: CGFloat, x: CGFloat) {
+        self.topConstraint?.constant = y
+        self.leftConstraint?.constant = x
+        UIView.animate(withDuration: 0.2, animations: {
+            self.imageView.setNeedsLayout()
+        }, completion: nil)
     }
 
-    internal func put(in place: UIView!) {
-        clearPreviousPlace()
+    func put(in place: CGRect) {
+        guard let _ = leftConstraint, let _ = topConstraint else {
+            addConstraints(with: place)
+            return
+        }
+        animateTopLefConstraints(with: place.origin.y, x: place.origin.x)
+    }
+
+    func addConstraints(with rect:CGRect) {
         UIView.animate(withDuration: 0, animations: {
-            place.addSubview(self.imageView)
-            let views = ["view": self.imageView!]
-            self.imageView.frame = CGRect(x: 0, y: 0, width: place.frame.width, height: place.frame.height)
-            place.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|", options: [.alignAllCenterX], metrics: nil, views: views))
-            place.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", options: [.alignAllCenterY], metrics: nil, views: views))
-            }, completion:{ done in
-                
-        })
+            self.playGroundView.insertSubview(self.imageView, at: 0)
+            let metrics = ["x":rect.origin.x,
+                           "y":rect.origin.y,
+                           "width": rect.width,
+                           "height": rect.height]
+
+            self.leftConstraint = NSLayoutConstraint(item: self.imageView,
+                                                     attribute: .left,
+                                                     relatedBy: .equal,
+                                                     toItem: self.playGroundView,
+                                                     attribute: .left,
+                                                     multiplier: 1.0,
+                                                     constant: metrics["x"]!);
+
+            self.topConstraint = NSLayoutConstraint(item: self.imageView,
+                                                    attribute: .top,
+                                                    relatedBy: .equal,
+                                                    toItem: self.playGroundView,
+                                                    attribute: .top,
+                                                    multiplier: 1.0,
+                                                    constant: metrics["y"]!);
+
+
+            let width = NSLayoutConstraint(item: self.imageView,
+                                           attribute: .width,
+                                           relatedBy: .equal,
+                                           toItem: nil,
+                                           attribute: .notAnAttribute,
+                                           multiplier: 1.0,
+                                           constant: metrics["width"]!);
+
+            let height = NSLayoutConstraint(item: self.imageView,
+                                            attribute: .height,
+                                            relatedBy: .equal,
+                                            toItem: nil,
+                                            attribute: .notAnAttribute,
+                                            multiplier: 1.0,
+                                            constant: metrics["height"]!);
+
+            self.playGroundView.addConstraints([self.leftConstraint!, self.topConstraint!, width, height])
+            }, completion:nil)
     }
 }

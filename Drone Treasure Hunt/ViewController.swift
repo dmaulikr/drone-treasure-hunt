@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var droneAScoreLabel: UILabel!
     @IBOutlet weak var droneBScoreLabel: UILabel!
+    @IBOutlet weak var playgroundView: UIView!
 
     var droneAWinsCount = 0 {
         willSet(new) {
@@ -94,7 +95,9 @@ class ViewController: UIViewController {
         paths = paths.union((droneB?.path)!)
         droneA?.path = Path()
         droneB?.path = Path()
-        self.collectionView.performBatchUpdates({ 
+
+        self.collectionView.performBatchUpdates({
+            assert(Thread.isMainThread)
             self.collectionView?.reloadItems(at: Array(paths))
             }) { (finished) in
                 continueBlock()
@@ -103,14 +106,13 @@ class ViewController: UIViewController {
 
     func showNewGameAlert() {
         self.operationQueue.addOperation {
-            DispatchQueue.main.async {
-                let newGameAlertController = UIAlertController(title: nil, message: "Tap on the start button and the drone treasure hunt will begin", preferredStyle: .alert)
+            let newGameAlertController = UIAlertController(title: nil, message: "Tap on the start button and the drone treasure hunt will begin", preferredStyle: .alert)
 
-                let startAction = UIAlertAction(title: "Start", style: .default) { (action) in
-                    self.startMatch()
-                }
-                newGameAlertController.addAction(startAction)
-
+            let startAction = UIAlertAction(title: "Start", style: .default) { (action) in
+                self.startMatch()
+            }
+            newGameAlertController.addAction(startAction)
+            DispatchQueue.main.sync {
                 self.present(newGameAlertController, animated: true, completion: nil)
             }
         }
@@ -142,9 +144,9 @@ class ViewController: UIViewController {
     }
 
     func createGameComponents() {
-        droneA = Drone(with: UIImage(named: "droneA")!, position: nil, color: UIColor.orange)
-        droneB = Drone(with: UIImage(named: "droneB")!, position: nil, color: UIColor.blue)
-        treasure = Treasure(with: UIImage(named: "treasure")!, position: nil)
+        droneA = Drone(with: UIImage(named: "droneA")!, position: nil, color: UIColor.orange, playGroundView: playgroundView)
+        droneB = Drone(with: UIImage(named: "droneB")!, position: nil, color: UIColor.blue, playGroundView: playgroundView)
+        treasure = Treasure(with: UIImage(named: "treasure")!, position: nil, playGroundView: playgroundView)
         droneAWinsCount = 0
         droneBWinsCount = 0
     }
@@ -164,22 +166,22 @@ class ViewController: UIViewController {
         }
         computeAndAssignComponentsPosition()
         self.operationQueue.addOperation {
-            DispatchQueue.main.async {
-                droneA.put(in: self.view(at: droneA.position!))
+            DispatchQueue.main.sync {
+                droneA.put(in: self.rect(at: droneA.position!))
             }
         }
         self.operationQueue.addOperation {
-            DispatchQueue.main.async {
-                droneB.put(in: self.view(at: droneB.position!))
+            DispatchQueue.main.sync {
+                droneB.put(in: self.rect(at: droneB.position!))
             }
         }
         self.operationQueue.addOperation {
-            DispatchQueue.main.async {
-                treasure.put(in: self.view(at: treasure.position!))
+            DispatchQueue.main.sync {
+                treasure.put(in: self.rect(at: treasure.position!))
             }
         }
         self.operationQueue.addOperation {
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 self.view.layoutIfNeeded()
             }
         }
@@ -209,23 +211,29 @@ class ViewController: UIViewController {
         return droneA!
     }
 
-    func view(at indexPath: IndexPath) -> UIView {
-        return tileCollectionViewCell(at: indexPath).tilePaintView
+    func rect(at indexPath: IndexPath) -> CGRect {
+        let view = tileCollectionViewCell(at: indexPath).tilePaintView!
+        let viewRectInControllerView = self.playgroundView.convert(view.frame, from: view)
+        return viewRectInControllerView
     }
 
     func move(drone: Drone) {
-        let opponentDrone = opponent(of: drone)
         let currentPosition = drone.position
-        let nextPosition = self.getNextPosition(for: drone, withforbiddenPath: opponentDrone.path)
+        let nextPosition = getNextPosition(for: drone)
         drone.position = nextPosition
-        self.collectionView.reloadItems(at: [currentPosition!])
-        drone.move(to: self.view(at: nextPosition))
+        DispatchQueue.main.sync {
+            drone.move(to: self.rect(at: nextPosition))
+            self.collectionView.performBatchUpdates({ 
+                self.collectionView.reloadItems(at: [currentPosition!, nextPosition])
+                }, completion: nil)
+        }
     }
 
     //MARK: drone movement logic
-    func getNextPosition(for drone: Drone, withforbiddenPath path: Path) -> IndexPath {
+    func getNextPosition(for drone: Drone) -> IndexPath {
         var possibleMoves = [IndexPath]()
-        let currentRow = drone.position.row
+        let opponentDrone = opponent(of: drone)
+        let currentRow = drone.position!.row
         if currentRow + rowsNumber < (rowsNumber * colsNumber) - 1 {
             //down indexpath
             let indexpath = indexPath(with: currentRow + rowsNumber)
@@ -252,7 +260,7 @@ class ViewController: UIViewController {
         }
 
         possibleMoves = possibleMoves.filter { (indexpath) -> Bool in
-                return !path.contains(indexpath)
+                return !opponentDrone.path.contains(indexpath) && opponentDrone.position != indexpath
             }
         let winningMove = possibleMoves.filter { (indexpath) -> Bool in
             return indexpath == treasure!.position
@@ -262,7 +270,6 @@ class ViewController: UIViewController {
         }
         let nextIndex = Int(arc4random_uniform(UInt32(possibleMoves.count)))
         let newMove = possibleMoves[nextIndex]
-
         return newMove
     }
 
@@ -299,18 +306,14 @@ class ViewController: UIViewController {
             }
             self.operationQueue.addOperation({
                 checkWinClosure()
-                DispatchQueue.main.sync {
-                    self.move(drone: self.droneA!)
-                }
+                self.move(drone: self.droneA!)
             })
             self.operationQueue.addOperation({
                 checkWinClosure()
                 if self.winHasOccured {
                     return
                 }
-                DispatchQueue.main.sync {
-                    self.move(drone: self.droneB!)
-                }
+                self.move(drone: self.droneB!)
             })
             self.operationQueue.addOperation({
                 self.checkWin()

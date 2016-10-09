@@ -15,5 +15,5 @@ enum Moves {
 typealias Path = [IndexPath]
 protocol Movable {
     var path: Path { get }
-    func move(to place:UIView)
+    func move(to place: CGRect)
 }
